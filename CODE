@@ -1,0 +1,89 @@
+html:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fundraising Info</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <h1>Fundraising Info</h1>
+  <div id="output">Loading...</div>
+
+  <script src="main.js"></script>
+</body>
+</html>
+
+JS:
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+
+const app = express();
+const PORT = 3000;
+
+app.use(cors());
+
+// Serve static files from client folder
+app.use(express.static(path.join(__dirname, 'client')));
+
+// API endpoint
+app.get('/api/data', (req, res) => {
+  res.json({
+    name: "Joey Tribbiani",
+    referralCode: "joey2025",
+    totalDonations: 1500
+  });
+});
+
+// Serve index.html for root URL
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'index.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`✅ Server running at http://localhost:${PORT}`);
+});
+
+
+JSON:
+{
+  "name": "k.project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}
+
+
+Main JS:
+// YOUR JAVASCRIPT CODE FOR INDEX.HTML GOES HERE
+fetch('/api/data')
+  .then(res => {
+    if (!res.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return res.json();
+  })
+  .then(data => {
+    document.getElementById('output').innerHTML = `
+      <p><strong>Name:</strong> ${data.name}</p>
+      <p><strong>Referral Code:</strong> ${data.referralCode}</p>
+      <p><strong>Total Donations:</strong> $${data.totalDonations}</p>
+    `;
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    document.getElementById('output').innerText = 'Failed to load data.';
+  });
+
